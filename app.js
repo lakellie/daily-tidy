@@ -1,3 +1,10 @@
+const defaultTasks = [
+  { text: "elsie's room", done: false },
+  { text: "living room", done: false },
+  { text: "dining room", done: false },
+  { text: "kitchen", done: false },
+  { text: "bathroom", done: false },
+];
 
 const taskListEl = document.getElementById("task-list");
 const newTaskInput = document.getElementById("new-task");
@@ -74,7 +81,13 @@ function saveTasks(date, tasks) {
 
 function loadTasks(date) {
   const data = localStorage.getItem(`todo-${date}`);
-  return data ? JSON.parse(data) : [];
+  if (data) {
+    return JSON.parse(data);
+  } else {
+    // First time opening this day → use default tasks
+    saveTasks(date, defaultTasks);
+    return [...defaultTasks]; // clone so we don't modify the original
+  }
 }
 
 function populatePastDates() {
