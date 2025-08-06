@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+  <title>daily to-do list</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel=”apple-touch-icon” href=”https://github.com/lakellie/daily-to-do/blob/main/Screen%20Shot%202025-06-16%20at%2011.00.39%20PM.png?raw=true”/>
+</head>
+<body>
+    <h1>to-do list for <span id="date"></span> 🤍</h1>
+    <input type="text" id="new-task" placeholder="add a new task" />
+    <button onclick="addTask()">add</button>
+
+    <ul id="task-list"></ul>
+
+    <select id="past-dates" onchange="loadListForDate(this.value)">
+      <option disabled selected>view past lists</option>
+    </select>
+  
+  <script src="app.js"></script>
+</body>
+</html>
