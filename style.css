@@ -8,7 +8,7 @@ body {
 }
 
 ul#task-list button {
-     filter: hue-rotate(-0.16turn);
+     filter: hue-rotate(-0.4turn);
 }
 
 h1 {
