@@ -107,13 +107,12 @@ select {
   z-index: 1;
 }
 .dragging {
-  opacity: 0.6;
-  background: #e0e0e0;
+  opacity: 0.5;
 }
 
-.task-placeholder {
+.task-item-placeholder {
+  background: #ddd;
   height: 48px;
-  background: #ccc;
   margin: 8px 0;
   border-radius: 4px;
 }
