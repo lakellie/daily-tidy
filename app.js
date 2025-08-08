@@ -40,19 +40,8 @@ function toggleTask(index) {
 
 function renderTasks(tasks) {
   taskListEl.innerHTML = "";
-
   tasks.forEach((task, index) => {
     const li = document.createElement("li");
-    li.className = "task-item";
-    li.dataset.index = index;
-
-    const deleteBtn = document.createElement("button");
-    deleteBtn.className = "delete-swipe-btn";
-    deleteBtn.textContent = "Delete";
-    deleteBtn.onclick = () => deleteTask(index);
-
-    const content = document.createElement("div");
-    content.className = "task-content";
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -64,104 +53,22 @@ function renderTasks(tasks) {
     if (task.done) span.style.textDecoration = "line-through";
     span.style.flex = "1";
 
-    content.appendChild(checkbox);
-    content.appendChild(span);
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "❌";
+    deleteBtn.onclick = () => deleteTask(index);
+    deleteBtn.style.marginLeft = "10px";
+    deleteBtn.style.background = "none";
+    deleteBtn.style.border = "none";
+    deleteBtn.style.cursor = "pointer";
+    deleteBtn.style.fontSize = ".5em";
+
+    li.style.display = "flex";
+    li.style.alignItems = "center";
+
+    li.appendChild(checkbox);
+    li.appendChild(span);
     li.appendChild(deleteBtn);
-    li.appendChild(content);
     taskListEl.appendChild(li);
-
-    // --- Swipe to Delete ---
-    let startX = 0;
-    let currentX = 0;
-    let isSwiping = false;
-
-    content.addEventListener("touchstart", (e) => {
-      startX = e.touches[0].clientX;
-      isSwiping = true;
-    });
-
-    content.addEventListener("touchmove", (e) => {
-      if (!isSwiping) return;
-      currentX = e.touches[0].clientX;
-      const deltaX = currentX - startX;
-      if (deltaX < 0) {
-        content.style.transform = `translateX(${deltaX}px)`;
-      }
-    });
-
-    content.addEventListener("touchend", () => {
-      isSwiping = false;
-      if (currentX - startX < -60) {
-        content.style.transform = `translateX(-80px)`;
-      } else {
-        content.style.transform = `translateX(0)`;
-      }
-    });
-
-    // --- Touch-based Drag-and-Drop ---
-    let startY = 0;
-    let draggingEl = null;
-    let placeholderEl = null;
-
-    content.addEventListener("touchstart", (e) => {
-      if (e.touches.length > 1) return;
-
-      startY = e.touches[0].clientY;
-      draggingEl = li;
-      placeholderEl = document.createElement("li");
-      placeholderEl.className = "task-placeholder";
-
-      li.classList.add("dragging");
-      taskListEl.insertBefore(placeholderEl, li.nextSibling);
-    });
-
-    content.addEventListener("touchmove", (e) => {
-      e.preventDefault();
-      const touch = e.touches[0];
-      const deltaY = touch.clientY - startY;
-
-      draggingEl.style.transform = `translateY(${deltaY}px)`;
-
-      const allItems = [...taskListEl.querySelectorAll(".task-item")].filter(
-        (el) => el !== draggingEl
-      );
-
-      for (let otherEl of allItems) {
-        const rect = otherEl.getBoundingClientRect();
-        if (touch.clientY > rect.top && touch.clientY < rect.bottom) {
-          if (taskListEl.contains(placeholderEl)) {
-            taskListEl.removeChild(placeholderEl);
-          }
-          if (touch.clientY < rect.top + rect.height / 2) {
-            taskListEl.insertBefore(placeholderEl, otherEl);
-          } else {
-            taskListEl.insertBefore(placeholderEl, otherEl.nextSibling);
-          }
-          break;
-        }
-      }
-    });
-
-    content.addEventListener("touchend", () => {
-      if (placeholderEl && draggingEl) {
-        draggingEl.style.transform = "";
-        draggingEl.classList.remove("dragging");
-
-        taskListEl.insertBefore(draggingEl, placeholderEl);
-        taskListEl.removeChild(placeholderEl);
-
-        // Recalculate task order
-        const newOrderEls = [...taskListEl.querySelectorAll(".task-item")];
-        const newTasks = newOrderEls.map((el) => {
-          const i = parseInt(el.dataset.index);
-          return currentTasks[i];
-        });
-
-        currentTasks = newTasks;
-        saveTasks(today, currentTasks);
-        renderTasks(currentTasks);
-      }
-    });
   });
 }
 
